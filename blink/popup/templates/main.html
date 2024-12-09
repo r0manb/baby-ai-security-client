@@ -1,0 +1,59 @@
+<div class="control">
+    <nav class="nav">
+        <button class="nav__item settings__opener">
+            <svg>
+                <use xlink:href='#settings'></use>
+            </svg>
+        </button>
+        <button class="nav__item history__opener">
+            <svg>
+                <use xlink:href='#clock'></use>
+            </svg>
+        </button>
+    </nav>
+
+    <section class="turnblock">
+        <span class="turnblock__status active">Активно</span>
+        <button class="turnblock__button active">
+            <svg>
+                <use xlink:href='#turnoff'></use>
+            </svg>
+        </button>
+    </section>
+    <div class="settings menu__tab">
+        <h3 class="menu__tab-title">Выберите категории:</h3>
+        <div class="menu__tab-content">
+            <label class="settings__param">
+                Алкоголь
+                <input type="checkbox" class="settings__checkbox" data-category-id=6>
+                <span></span>
+            </label>
+            <label class="settings__param">
+                Азартные игры
+                <input type="checkbox" class="settings__checkbox" data-category-id=3>
+                <span></span>
+            </label>
+            <label class="settings__param">
+                Политика
+                <input type="checkbox" class="settings__checkbox" data-category-id=5>
+                <span></span>
+            </label>
+            <label class="settings__param">
+                Табак
+                <input type="checkbox" class="settings__checkbox" data-category-id=0>
+                <span></span>
+            </label>
+            <label class="settings__param">
+                Насилие
+                <input type="checkbox" class="settings__checkbox" data-category-id=4>
+                <span></span>
+            </label>
+            <label class="settings__param">
+                Порнография
+                <input type="checkbox" class="settings__checkbox" data-category-id=1>
+                <span></span>
+            </label>
+        </div>
+        <button class="menu__tab-return">Вернуться назад</button>
+    </div>
+</div>

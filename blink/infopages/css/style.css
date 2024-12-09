@@ -1,0 +1,110 @@
+*{
+    box-sizing: border-box;
+    font-family: 'Montserrat Alternates';
+    font-weight: 500;
+    padding: 0;
+    margin: 0;
+}
+body{
+    background: #F2F1F0;
+}
+
+
+
+.root{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.information {
+    max-width: 650px;
+    width: 100%;
+    margin: 0 20px;
+    height: 94%;
+    background: #fff;
+    border-radius: 28px;
+    display: flex;
+    flex-direction: column;
+}
+.information__head{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    padding-top: 20px;
+}
+
+.information__logo{
+    width: 53px;
+}
+.title{
+    font-family: 'Montserrat';
+    font-weight: bold;
+    font-size: 27px;
+    color: #000;
+}
+
+
+.information__body {
+    height: 100%;
+    padding: 0 35px;
+    margin-top: 40px;
+}
+.information__title{
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.information__body p {
+    text-align: left;
+    margin-bottom: 10px;
+}.information__body p:last-child{
+    margin-bottom: 0;
+}
+
+.information__history{
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+.information__history > thead{
+    border-bottom: 1px solid #000;
+    border-collapse: collapse;
+}
+.information__history th{
+    padding-bottom: 10px;
+}
+.information__history td {
+    font-size: 14px;
+    padding: 15px 0;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.information__history td * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    padding-right: 10px;
+    white-space: nowrap;
+}
+.information__history td:first-child{
+    max-width: 25%;
+}
+.information__history td:nth-child(2){
+    max-width: 30%;
+}
+.information__history td:last-child{
+    max-width: 45%;
+}
+.information__history td:last-child{
+    padding-right: 0;
+}
+/* .information__history >  */

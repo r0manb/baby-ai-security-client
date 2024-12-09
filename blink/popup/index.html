@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/fonts/index.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>BAIS</title>
+</head>
+
+<body>
+    <div class="popup">
+        <div class="popup__content">
+            <header class="header">
+                <div class="header__info">
+                    <img class="header__logo" src="../assets/images/icon128.png" alt="Логотип">
+                    <h1 class="header__title">AI Baby Security</h1>
+                </div>
+                <div class="header__burger disabled">
+                    <div class="header__burger_wrapper">
+                        <div class="header__burger_content">
+                            <div class="header__burger-item"></div>
+                            <div class="header__burger-item"></div>
+                            <div class="header__burger-item"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu">
+                    <div class="menu__list">
+                        <button class="menu__button menu__profile" data-redirect-to="login">Войти</button>
+                        <button class="menu__button htu__opener">
+                            Использование
+                        </button>
+                        <button class="menu__button menu__tab-opener" data-menu-tab-id="menu__tab-aboutus">
+                            О нас
+                        </button>
+                    </div>
+
+                    <div id="menu__tab-howtouse" class="menu__tab">
+                        <h3 class="menu__tab-title">Как использовать?</h3>
+                        <div class="menu__tab-content">
+                            <p>AI Baby Security - расширение на основе ИИ, которое распознает тематику контента на сайте
+                                и блокирует несоответствующий</p>
+                            <p>Чтобы наш сервис начал работу, необходимо зарегистрироваться и ввести код с почты, а
+                                также выбрать нужные пукнкты в меню настроек</p>
+                        </div>
+                        <button class="menu__tab-return">Вернуться в меню</button>
+                    </div>
+                    <div id="menu__tab-aboutus" class="menu__tab">
+                        <h3 class="menu__tab-title">О нас</h3>
+                        <div class="menu__tab-content">
+                            <p>Devour team - маленькая команда разработчиков, которая очень ждёт вашей обратной связи и
+                                денег (очень много)</p>
+                        </div>
+                        <button class="menu__tab-return">Вернуться в меню</button>
+                    </div>
+                </div>
+            </header>
+
+
+            <div class="body">
+
+            </div>
+
+        </div>
+    </div>
+
+    <svg display='none'>
+        <symbol id="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+                d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm2.55,13.83A.94.94,0,0,1,14,16a1,1,0,0,1-.83-.45l-2-3A1,1,0,0,1,11,12V7a1,1,0,0,1,2,0v4.7l1.83,2.75A1,1,0,0,1,14.55,15.83Z">
+            </path>
+        </symbol>
+    </svg>
+    <svg display='none'>
+        <symbol id="settings" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+                d="M21.9,10.59,20,8.69V6a2,2,0,0,0-2-2H15.31l-1.9-1.9a2,2,0,0,0-2.82,0L8.69,4H6A2,2,0,0,0,4,6V8.69l-1.9,1.9a2,2,0,0,0,0,2.82L4,15.31V18a2,2,0,0,0,2,2H8.69l1.9,1.9a2,2,0,0,0,2.82,0l1.9-1.9H18a2,2,0,0,0,2-2V15.31l1.9-1.9A2,2,0,0,0,21.9,10.59ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16Z">
+            </path>
+        </symbol>
+    </svg>
+    <svg display='none'>
+        <symbol id="turnoff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+            <path
+                d="M16 6.07026C18.3912 7.45349 20 10.0389 20 13C20 17.4183 16.4183 21 12 21C7.58172 21 4 17.4183 4 13C4 10.0389 5.60879 7.45349 8 6.07026M12 3V13"
+                stroke="inherit" stroke-width="2" stroke-linecap="round" />
+        </symbol>
+    </svg>
+
+    <script src="../assets/libs/jquery/jquery-3.6.0.min.js"></script>
+    <script type="module" src="js/formValidators.js"></script>
+    <script type="module" src="js/index.js"></script>
+</body>
+
+</html>
