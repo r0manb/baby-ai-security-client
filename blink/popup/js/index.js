@@ -22,23 +22,23 @@ const eventsFuncList = {
         event: 'click'
     },
     '.form.register': {
-        func: function (event) { 
+        func: function (event) {
             event.preventDefault();
-            registerHandler(); 
+            registerHandler();
         },
         event: 'submit'
     },
     '.form.login': {
-        func: function (event) { 
+        func: function (event) {
             event.preventDefault();
-            loginHandler(); 
+            loginHandler();
         },
         event: 'submit'
     },
     '.form.confirmation': {
-        func: function (event) { 
+        func: function (event) {
             event.preventDefault();
-            userConfirmationHandler(); 
+            userConfirmationHandler();
         },
         event: 'submit'
     },
@@ -69,7 +69,7 @@ const showNotification = (message, type = 'success') => {
         if (!notification.classList.contains('--can_be_closed')) return;
         notification.classList.remove('--can_be_closed');
         closeSpan.removeEventListener('click', closeNotification);
-    
+
         notification.classList.add('closing');
         setTimeout(() => notification.remove(), 400);
     }
@@ -134,7 +134,12 @@ async function renderLoginPage() {
     $('.menu__profile').attr('data-redirect-to', "register");
 }
 async function renderMainPage() {
-    const storage = await chrome.storage.sync.get(['token', 'extensionStatus', 'categories']);
+    const storage = await chrome.storage.sync.get([
+        'token', 
+        'extensionStatus', 
+        'selectedCategories', 
+        'categories'
+    ]);
     if (!storage.token) return renderLoginPage();
 
     canOpenMenu = true;
@@ -165,8 +170,20 @@ async function renderMainPage() {
             chrome.action.setBadgeText({ text: !res.extensionStatus ? "ON" : "" });
         })
     });
+    
+    const settingsBody = document.querySelector('.settings > .menu__tab-content');
+    for (const catId in storage.categories) {
+        if (catId == 2) continue;
 
-    storage.categories.forEach(cat => {
+        const categoryLabel = document.createElement('label');
+        categoryLabel.classList.add('settings__param');
+        categoryLabel.innerHTML = `
+                ${storage.categories[catId]}
+                <input type="checkbox" class="settings__checkbox" data-category-id=${catId}>
+                <span></span>`
+        settingsBody.appendChild(categoryLabel);
+    }
+    storage.selectedCategories.forEach(cat => {
         $(`input[data-category-id=${cat}]`).attr('checked', 'checked');
     });
 
@@ -179,18 +196,18 @@ async function renderMainPage() {
 
 
     $(".settings__checkbox").change(function () {
-        chrome.storage.sync.get(['categories']).then(res => {
+        chrome.storage.sync.get(['selectedCategories']).then(res => {
             if (this.checked) {
                 chrome.storage.sync.set({
-                    categories: [
-                        ...res.categories,
+                    selectedCategories: [
+                        ...res.selectedCategories,
                         $(this).attr('data-category-id')
                     ]
                 });
             } else {
                 const currentCheckBoxId = $(this).attr('data-category-id')
                 chrome.storage.sync.set({
-                    categories: res.categories.filter(item => item != currentCheckBoxId)
+                    selectedCategories: res.selectedCategories.filter(item => item != currentCheckBoxId)
                 });
             }
         })
@@ -290,9 +307,9 @@ async function loginHandler() {
 
         chrome.storage.sync.set({
             token: data.token,
+            categories: data.categories,
+            selectedCategories: [],
             extensionStatus: true,
-            categories: [],
-            history: []
         });
         chrome.action.setBadgeText({ text: "ON" });
 
@@ -323,13 +340,16 @@ async function userConfirmationHandler() {
             },
             body: JSON.stringify({ password })
         });
-
+        const data = await response.json();
 
         if (!response.ok) {
             if (response.status == 401) logoutHandler();
-            throw await response.json();
+            throw data;
         }
 
+        chrome.storage.sync.set({
+            categories: data.categories
+        });
         return renderMainPage();
     } catch (error) {
         errorHandler(error);
