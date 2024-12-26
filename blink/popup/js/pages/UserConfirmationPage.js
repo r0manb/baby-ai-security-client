@@ -1,0 +1,56 @@
+import Page from "./Page.js";
+import MenuState from "../utils/MenuState.js";
+import EventEmitter from "../utils/EventEmitter.js";
+import errorHandler from "../utils/errorHandler.js";
+import { authRoute } from "/assets/utils/apiRoutes.js";
+import { confirmationFormValidator } from "../utils/formValidators.js";
+
+class UserConfirmationPage extends Page {
+
+    render = async () => {
+        MenuState.canOpen = false;
+        const authPage = await this._getPageTemplate('/popup/templates/auth.html');
+        $('.body').html(authPage);
+    }
+
+    submitForm = async () => {
+        try {
+            $(`.form__input > .form__input-error`).text('');
+
+            const storage = await chrome.storage.sync.get('token');
+            if (!storage.token) return EventEmitter.emit('RENDER_LOGIN_PAGE');
+
+            const password = $('input[name="password"]').val();
+
+            const errors = confirmationFormValidator(password);
+            if (Object.keys(errors).length) {
+                throw { errors };
+            }
+
+            const response = await fetch(`${authRoute}/user_confirmation`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${storage.token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ password })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (response.status == 401) EventEmitter.emit('LOGOUT');
+                throw data;
+            }
+
+            chrome.storage.sync.set({
+                categories: data.categories
+            });
+
+            return EventEmitter.emit('RENDER_MAIN_PAGE');
+        } catch (err) {
+            errorHandler(err);
+        }
+    }
+}
+
+export default new UserConfirmationPage();

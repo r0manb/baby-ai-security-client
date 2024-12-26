@@ -30,7 +30,8 @@
         "assets/fonts/*.*",
         "wrongpage/index.html",
         "wrongpage/style.css",
-        "assets/images/Lock.png"
+        "assets/images/Lock.png",
+        "assets/utils/apiRoutes.js"
       ],
       "matches": [
         "<all_urls>"

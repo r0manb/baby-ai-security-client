@@ -18,10 +18,12 @@ const checkPage = async () => {
         if (!storage.extensionStatus || !storage.token) {
             return document.body.classList.add("verification_completed");
         }
-
+        
+        const { apiRoute } = await import(chrome.runtime.getURL("/assets/utils/apiRoutes.js"));
         const tabData = await chrome.runtime.sendMessage({ event: "GET_TAB" });
         const text = document.body.innerText;
-        const response = await fetch('http://127.0.0.1:5000/api/predict', {
+        
+        const response = await fetch(`${apiRoute}/predict`, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${storage.token}`,

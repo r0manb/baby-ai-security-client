@@ -1,7 +1,9 @@
+import { userRoute } from "../../assets/utils/apiRoutes.js";
+
 async function fetchHistory() {
     try {
         const storage = await chrome.storage.sync.get(['token', 'categories']);
-        const response = await fetch('http://127.0.0.1:5000/api/user/history', {
+        const response = await fetch(`${userRoute}/history`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${storage.token}`,
