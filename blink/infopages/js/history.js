@@ -1,9 +1,26 @@
+import Pagination from "./modules/Pagination.js";
 import { userRoute } from "../../assets/utils/apiRoutes.js";
 
-async function fetchHistory() {
+
+const window_href = new URL(window.location.href);
+
+function goToPage(page) {
+    window_href.searchParams.set('page', page);
+    window.history.pushState({}, '', window_href);
+    fetchHistory(page);
+}
+
+window.addEventListener('popstate', (e) => {
+    window.location.replace(e.target.location.href);
+});
+
+async function fetchHistory(page) {
     try {
+        const tableBody = document.querySelector('.information__history > tbody');
+        tableBody.innerHTML = '';
+
         const storage = await chrome.storage.sync.get(['token', 'categories']);
-        const response = await fetch(`${userRoute}/history`, {
+        const response = await fetch(`${userRoute}/history?page=${page}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${storage.token}`,
@@ -11,10 +28,9 @@ async function fetchHistory() {
             }
         });
 
-        const data = await response.json();
-        const tableBody = document.querySelector('.information__history > tbody');
-
-        for (const tableElem of data) {
+        const { total_count, items_on_page, history } = await response.json();
+        
+        for (const tableElem of history) {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><p>${tableElem.name}</p></td>
@@ -24,9 +40,29 @@ async function fetchHistory() {
             tableBody.appendChild(tr);
         }
 
+        if (!history.length){
+            tableBody.innerHTML = '<p class="information__message clear">Здесь пока что пусто.</p>';
+        }
+
+        return { totalCount: total_count, itemsOnPage: items_on_page }
     } catch (error) {
         console.log(error);
     }
 }
 
-fetchHistory();
+
+const startPage = Number(window_href.searchParams.get('page'));
+const { totalCount, itemsOnPage } = await fetchHistory(startPage);
+const totalPages = Math.ceil(totalCount / itemsOnPage);
+
+if (startPage < totalPages) {
+    const pagination = new Pagination(totalPages, 3, startPage + 1);
+
+    pagination.render(document.querySelector('.information'));
+    pagination.onChange(e => {
+        const page = Number(window_href.searchParams.get('page'));
+        if (e.target.value - 1 != page) {
+            goToPage(e.target.value - 1);
+        }
+    });
+}
