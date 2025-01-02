@@ -8,7 +8,7 @@ import { registerFormValidator } from "../utils/formValidators.js";
 class RegisterPage extends Page {
 
     render = async () => {
-        MenuState.canOpen = true;
+        MenuState.setCanOpen(true);
         $('.header__burger').removeClass('disabled');
 
         const registerPage = await this._getPageTemplate('/popup/templates/register.html');

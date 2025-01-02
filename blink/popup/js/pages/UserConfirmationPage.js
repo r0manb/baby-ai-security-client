@@ -7,7 +7,7 @@ import { confirmationFormValidator } from "../utils/formValidators.js";
 class UserConfirmationPage extends Page {
 
     render = async () => {
-        MenuState.canOpen = false;
+        MenuState.setCanOpen(false);
         const authPage = await this._getPageTemplate('/popup/templates/auth.html');
         $('.body').html(authPage);
         this.submitBtn = document.querySelector('.form__submit');

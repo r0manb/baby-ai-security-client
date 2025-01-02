@@ -7,7 +7,7 @@ import { loginFormValidator } from "../utils/formValidators.js";
 class LoginPage extends Page {
 
     render = async () => {
-        MenuState.canOpen = true;
+        MenuState.setCanOpen(true);
         $('.header__burger').removeClass('disabled');
 
         const loginPage = await this._getPageTemplate('/popup/templates/login.html');

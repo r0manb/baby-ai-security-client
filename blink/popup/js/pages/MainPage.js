@@ -13,7 +13,7 @@ class MainPage extends Page {
         ]);
         if (!storage.token) return EventEmitter.emit('RENDER_LOGIN_PAGE');
 
-        MenuState.canOpen = true;
+        MenuState.setCanOpen(true);
         $('.header__burger').removeClass('disabled');
 
         const mainPage = await this._getPageTemplate('/popup/templates/main.html');
