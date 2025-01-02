@@ -625,6 +625,14 @@ h1 {
     background: #43AEC6;
 }
 
+.form__submit:disabled{
+    cursor: no-drop;
+    background: #c3ecf5;
+}
+.form__submit:disabled:hover,
+.form__submit:disabled:focus{
+    background: #c3ecf5;
+}
 
 .form__ref {
     /* display: flex; */

@@ -1,7 +1,6 @@
 import Page from "./Page.js";
 import MenuState from "../utils/MenuState.js";
 import EventEmitter from "../utils/EventEmitter.js";
-import errorHandler from "../utils/errorHandler.js";
 import showNotification from "../components/notification.js";
 import { authRoute } from "/assets/utils/apiRoutes.js";
 import { registerFormValidator } from "../utils/formValidators.js";
@@ -15,13 +14,15 @@ class RegisterPage extends Page {
         const registerPage = await this._getPageTemplate('/popup/templates/register.html');
         $('.body').html(registerPage);
 
+        this.submitBtn = document.querySelector('.form__submit');
+
         MenuState.closeMenu();
         $('.menu__profile').text('Войти');
         $('.menu__profile').attr('data-redirect-to', "login");
     }
 
     submitForm = async () => {
-        try {
+        this._submitFormWrapper(async () => {
             $(`.form__input > .form__input-error`).text('');
 
             const email = $('input[name="email"]').val();
@@ -52,9 +53,7 @@ class RegisterPage extends Page {
 
             showNotification(data.message, 'success');
             return EventEmitter.emit('RENDER_LOGIN_PAGE');
-        } catch (err) {
-            errorHandler(err);
-        }
+        })
     }
 }
 

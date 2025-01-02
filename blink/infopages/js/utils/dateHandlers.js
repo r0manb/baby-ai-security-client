@@ -32,5 +32,5 @@ export const formatDateAndTime = (date, fullMonth = false) => {
         secondPart = `${workDate.getDate()} ${fullMonth ? MONTHS[workDate.getMonth()] : MONTHS[workDate.getMonth()].substr(0, 3)}`;
     }
 
-    return `${workDate.getHours()}:${addStartZero(workDate.getMinutes())}, ${secondPart}${year}`;
+    return `${addStartZero(workDate.getHours())}:${addStartZero(workDate.getMinutes())}, ${secondPart}${year}`;
 }

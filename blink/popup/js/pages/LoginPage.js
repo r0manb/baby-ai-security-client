@@ -1,7 +1,6 @@
 import Page from "./Page.js";
 import MenuState from "../utils/MenuState.js";
 import EventEmitter from "../utils/EventEmitter.js";
-import errorHandler from "../utils/errorHandler.js";
 import { authRoute } from "/assets/utils/apiRoutes.js";
 import { loginFormValidator } from "../utils/formValidators.js";
 
@@ -14,13 +13,15 @@ class LoginPage extends Page {
         const loginPage = await this._getPageTemplate('/popup/templates/login.html');
         $('.body').html(loginPage);
 
+        this.submitBtn = document.querySelector('.form__submit');
+
         MenuState.closeMenu();
         $('.menu__profile').text('Регистрация');
         $('.menu__profile').attr('data-redirect-to', "register");
     }
 
     submitForm = async () => {
-        try {
+        this._submitFormWrapper(async () => {
             $(`.form__input > .form__input-error`).text('');
 
             const email = $('input[name="email"]').val();
@@ -53,9 +54,7 @@ class LoginPage extends Page {
             chrome.action.setBadgeText({ text: "ON" });
 
             return EventEmitter.emit("RENDER_MAIN_PAGE");
-        } catch (err) {
-            errorHandler(err);
-        }
+        })
     }
 }
 
