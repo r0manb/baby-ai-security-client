@@ -17,8 +17,8 @@ class UserConfirmationPage extends Page {
         this._submitFormWrapper(async () => {
             $(`.form__input > .form__input-error`).text('');
 
-            const storage = await chrome.storage.sync.get('token');
-            if (!storage.token) return EventEmitter.emit('RENDER_LOGIN_PAGE');
+            const { token } = await chrome.storage.sync.get('token');
+            if (!token) return EventEmitter.emit('RENDER_LOGIN_PAGE');
 
             const password = $('input[name="password"]').val();
 
@@ -30,22 +30,23 @@ class UserConfirmationPage extends Page {
             const response = await fetch(`${authRoute}/user_confirmation`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${storage.token}`,
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ password })
             });
             const data = await response.json();
-            
+
             if (!response.ok) {
                 if (response.status == 401) EventEmitter.emit('LOGOUT');
                 throw data;
             }
 
             chrome.storage.sync.set({
-                categories: data.categories
+                categories: data.categories.list,
+                neutralCategoryId: data.categories.neutral_category_id
             });
-            
+
             return EventEmitter.emit('RENDER_MAIN_PAGE');
         });
     }

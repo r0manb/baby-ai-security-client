@@ -5,13 +5,20 @@ import EventEmitter from "../utils/EventEmitter.js";
 class MainPage extends Page {
 
     render = async () => {
-        const storage = await chrome.storage.sync.get([
+        const {
+            token,
+            extensionStatus,
+            selectedCategories,
+            categories,
+            neutralCategoryId
+        } = await chrome.storage.sync.get([
             'token',
             'extensionStatus',
             'selectedCategories',
-            'categories'
+            'categories',
+            'neutralCategoryId'
         ]);
-        if (!storage.token) return EventEmitter.emit('RENDER_LOGIN_PAGE');
+        if (!token) return EventEmitter.emit('RENDER_LOGIN_PAGE');
 
         MenuState.setCanOpen(true);
         $('.header__burger').removeClass('disabled');
@@ -32,29 +39,30 @@ class MainPage extends Page {
             }
         }
 
-        if (!storage.extensionStatus) setButtonStatus(false);
+        if (!extensionStatus) setButtonStatus(false);
 
         $(".turnblock__button").on("click", function () {
-            chrome.storage.sync.get(['extensionStatus']).then(res => {
-                chrome.storage.sync.set({ extensionStatus: !res.extensionStatus });
-                setButtonStatus(!res.extensionStatus);
-                chrome.action.setBadgeText({ text: !res.extensionStatus ? "ON" : "" });
-            })
+            chrome.storage.sync.get(['extensionStatus'])
+                .then(res => {
+                    chrome.storage.sync.set({ extensionStatus: !res.extensionStatus });
+                    setButtonStatus(!res.extensionStatus);
+                    chrome.action.setBadgeText({ text: !res.extensionStatus ? "ON" : "" });
+                })
         });
 
         const settingsBody = document.querySelector('.settings > .menu__tab-content');
-        for (const catId in storage.categories) {
-            if (catId == 2) continue;
+        for (const catId in categories) {
+            if (catId == neutralCategoryId) continue;
 
             const categoryLabel = document.createElement('label');
             categoryLabel.classList.add('settings__param');
             categoryLabel.innerHTML = `
-                ${storage.categories[catId]}
+                ${categories[catId]}
                 <input type="checkbox" class="settings__checkbox" data-category-id=${catId}>
                 <span></span>`
             settingsBody.appendChild(categoryLabel);
         }
-        storage.selectedCategories.forEach(cat => {
+        selectedCategories.forEach(cat => {
             $(`input[data-category-id=${cat}]`).attr('checked', 'checked');
         });
 
@@ -66,21 +74,22 @@ class MainPage extends Page {
         });
 
         $(".settings__checkbox").change(function () {
-            chrome.storage.sync.get(['selectedCategories']).then(res => {
-                if (this.checked) {
-                    chrome.storage.sync.set({
-                        selectedCategories: [
-                            ...res.selectedCategories,
-                            $(this).attr('data-category-id')
-                        ]
-                    });
-                } else {
-                    const currentCheckBoxId = $(this).attr('data-category-id')
-                    chrome.storage.sync.set({
-                        selectedCategories: res.selectedCategories.filter(item => item != currentCheckBoxId)
-                    });
-                }
-            })
+            chrome.storage.sync.get(['selectedCategories'])
+                .then(res => {
+                    if (this.checked) {
+                        chrome.storage.sync.set({
+                            selectedCategories: [
+                                ...res.selectedCategories,
+                                $(this).attr('data-category-id')
+                            ]
+                        });
+                    } else {
+                        const currentCheckBoxId = $(this).attr('data-category-id')
+                        chrome.storage.sync.set({
+                            selectedCategories: res.selectedCategories.filter(item => item != currentCheckBoxId)
+                        });
+                    }
+                });
         });
 
         MenuState.closeMenu();

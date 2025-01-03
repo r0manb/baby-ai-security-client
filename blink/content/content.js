@@ -14,8 +14,19 @@ const renderWrongPage = async () => {
 
 const checkPage = async () => {
     try {
-        const storage = await chrome.storage.sync.get(['token', 'extensionStatus', 'selectedCategories']);
-        if (!storage.extensionStatus || !storage.token) {
+        const {
+            token,
+            extensionStatus,
+            selectedCategories,
+            neutralCategoryId
+        } = await chrome.storage.sync.get([
+            'token', 
+            'extensionStatus', 
+            'selectedCategories',
+            'neutralCategoryId'
+        ]);
+
+        if (!extensionStatus || !token) {
             return document.body.classList.add("verification_completed");
         }
         
@@ -26,7 +37,7 @@ const checkPage = async () => {
         const response = await fetch(`${apiRoute}/predict`, {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${storage.token}`,
+                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -40,9 +51,9 @@ const checkPage = async () => {
             return document.body.classList.add("verification_completed");
         }
 
-        const data = await response.json();
+        const { category_id } = await response.json();
 
-        if ((!storage.selectedCategories.length && data.category_id != 2) || storage.selectedCategories.includes(data.category_id.toString())) {
+        if ((!selectedCategories.length && category_id != neutralCategoryId) || selectedCategories.includes(category_id.toString())) {
             return renderWrongPage();
         }
 

@@ -47,7 +47,8 @@ class LoginPage extends Page {
 
             chrome.storage.sync.set({
                 token: data.token,
-                categories: data.categories,
+                categories: data.categories.list,
+                neutralCategoryId: data.categories.neutral_category_id,
                 selectedCategories: [],
                 extensionStatus: true,
             });
