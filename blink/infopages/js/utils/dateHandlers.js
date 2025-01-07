@@ -1,9 +1,6 @@
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
 
-const addStartZero = (num) => {
-    if (num > 9) return num;
-    return `0${num}`;
-}
+const addStartZero = (num) => `${num > 9 ? '' : '0'}${num}`
 
 export const isThisYear = (date) =>
     (new Date(date)).getFullYear() == (new Date()).getFullYear()

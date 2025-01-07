@@ -1,7 +1,7 @@
 import Page from "./Page.js";
 import EventEmitter from "../utils/EventEmitter.js";
 
-class LoginPage extends Page {
+class LogoutPage extends Page {
 
     submitForm = async () => {
         chrome.storage.sync.clear();
@@ -10,4 +10,4 @@ class LoginPage extends Page {
     }
 }
 
-export default new LoginPage();
+export default new LogoutPage();
