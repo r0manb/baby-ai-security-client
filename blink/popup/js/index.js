@@ -5,10 +5,10 @@ import {
     UserConfirmationPage,
     MainPage,
     LogoutPage
-} from "/popup/js/pages/index.js";
+} from "./pages/index.js";
 
-import EventEmitter from '/popup/js/utils/EventEmitter.js';
-import MenuState from '/popup/js/utils/MenuState.js'
+import EventEmitter from "./utils/EventEmitter.js";
+import MenuState from "./utils/MenuState.js";
 
 
 
