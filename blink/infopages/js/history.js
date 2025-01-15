@@ -19,7 +19,7 @@ async function fetchHistory(page) {
         const tableBody = document.querySelector('.information__history > tbody');
         tableBody.innerHTML = '';
 
-        const storage = await chrome.storage.sync.get(['token', 'categories']);
+        const storage = await chrome.storage.local.get(['token', 'categories']);
         const response = await fetch(`${userRoute}/history?page=${page}`, {
             method: "GET",
             headers: {

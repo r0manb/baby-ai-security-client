@@ -80,7 +80,7 @@ DOMObserver.observe(document.querySelector('.body'), {
 });
 
 async function start() {
-    const storage = await chrome.storage.sync.get('token');
+    const storage = await chrome.storage.local.get('token');
 
     if (storage.token) {
         return EventEmitter.emit('RENDER_CONFIRMPASS_PAGE');

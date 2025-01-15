@@ -11,7 +11,7 @@ class MainPage extends Page {
             selectedCategories,
             categories,
             neutralCategoryId
-        } = await chrome.storage.sync.get([
+        } = await chrome.storage.local.get([
             'token',
             'extensionStatus',
             'selectedCategories',
@@ -42,9 +42,9 @@ class MainPage extends Page {
         if (!extensionStatus) setButtonStatus(false);
 
         $(".turnblock__button").on("click", function () {
-            chrome.storage.sync.get(['extensionStatus'])
+            chrome.storage.local.get(['extensionStatus'])
                 .then(res => {
-                    chrome.storage.sync.set({ extensionStatus: !res.extensionStatus });
+                    chrome.storage.local.set({ extensionStatus: !res.extensionStatus });
                     setButtonStatus(!res.extensionStatus);
                     chrome.action.setBadgeText({ text: !res.extensionStatus ? "ON" : "" });
                 })
@@ -74,10 +74,10 @@ class MainPage extends Page {
         });
 
         $(".settings__checkbox").change(function () {
-            chrome.storage.sync.get(['selectedCategories'])
+            chrome.storage.local.get(['selectedCategories'])
                 .then(res => {
                     if (this.checked) {
-                        chrome.storage.sync.set({
+                        chrome.storage.local.set({
                             selectedCategories: [
                                 ...res.selectedCategories,
                                 $(this).attr('data-category-id')
@@ -85,7 +85,7 @@ class MainPage extends Page {
                         });
                     } else {
                         const currentCheckBoxId = $(this).attr('data-category-id')
-                        chrome.storage.sync.set({
+                        chrome.storage.local.set({
                             selectedCategories: res.selectedCategories.filter(item => item != currentCheckBoxId)
                         });
                     }

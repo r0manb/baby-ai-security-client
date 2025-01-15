@@ -17,7 +17,7 @@ class UserConfirmationPage extends Page {
         this._submitFormWrapper(async () => {
             $(`.form__input > .form__input-error`).text('');
 
-            const { token } = await chrome.storage.sync.get('token');
+            const { token } = await chrome.storage.local.get('token');
             if (!token) return EventEmitter.emit('RENDER_LOGIN_PAGE');
 
             const password = $('input[name="password"]').val();
@@ -42,7 +42,7 @@ class UserConfirmationPage extends Page {
                 throw data;
             }
 
-            chrome.storage.sync.set({
+            chrome.storage.local.set({
                 categories: data.categories.list,
                 neutralCategoryId: data.categories.neutral_category_id
             });

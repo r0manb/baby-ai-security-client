@@ -19,7 +19,7 @@ const checkPage = async () => {
             extensionStatus,
             selectedCategories,
             neutralCategoryId
-        } = await chrome.storage.sync.get([
+        } = await chrome.storage.local.get([
             'token', 
             'extensionStatus', 
             'selectedCategories',
