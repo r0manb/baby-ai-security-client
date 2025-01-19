@@ -4,4 +4,4 @@ export const authRoute = `${apiRoute}/auth`;
 export const userRoute = `${apiRoute}/user`;
 
 export const popup = "/popup";
-export const templatesRoute = `${popup}/templates`;
+export const popupTemplatesRoute = `${popup}/templates`;

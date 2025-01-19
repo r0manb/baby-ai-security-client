@@ -1,6 +1,7 @@
 import Pagination from "./components/Pagination.js";
 import { formatDateAndTime } from "./utils/dateHandlers.js";
-import { userRoute } from "../../assets/utils/apiRoutes.js";
+import { userRoute } from "../../utils/apiRoutes.js";
+import $request from "../../utils/requestHandler.js";
 
 const window_href = new URL(window.location.href);
 
@@ -19,21 +20,15 @@ async function fetchHistory(page) {
         const tableBody = document.querySelector('.information__history > tbody');
         tableBody.innerHTML = '';
 
-        const storage = await chrome.storage.local.get(['token', 'categories']);
-        const response = await fetch(`${userRoute}/history?page=${page}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${storage.token}`,
-                "Content-Type": "application/json",
-            }
-        });
+        const { categories } = await chrome.storage.local.get(['categories']);
 
-        const { total_count, items_on_page, history } = await response.json();
+        const { data } = await $request.get(`${userRoute}/history?page=${page}`);
+        const { total_count, items_on_page, history } = data;
 
         tableBody.innerHTML = '';
         for (const tableElem of history) {
             const tr = document.createElement('tr');
-            const category = storage.categories[tableElem.category_id];
+            const category = categories[tableElem.category_id];
             const createdAt = formatDateAndTime(tableElem.created_at);
             tr.innerHTML = `
                 <td><a href="${tableElem.url}" title="${tableElem.name}">${tableElem.name}</a></td>

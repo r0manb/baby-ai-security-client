@@ -3,7 +3,8 @@
   "version": "1.0",
   "manifest_version": 3,
   "background": {
-    "service_worker": "serviceWorker.js"
+    "service_worker": "serviceWorker.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -28,10 +29,12 @@
     {
       "resources": [
         "assets/fonts/*.*",
+        "assets/images/Lock.png",
+        "assets/libs/*",
         "wrongpage/index.html",
         "wrongpage/style.css",
-        "assets/images/Lock.png",
-        "assets/utils/apiRoutes.js"
+        "utils/apiRoutes.js",
+        "utils/requestHandler.js"
       ],
       "matches": [
         "<all_urls>"

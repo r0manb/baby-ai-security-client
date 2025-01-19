@@ -1,8 +1,9 @@
 import Page from "./Page.js";
 import MenuState from "../utils/MenuState.js";
 import EventEmitter from "../utils/EventEmitter.js";
-import { authRoute } from "/assets/utils/apiRoutes.js";
+import { authRoute, popupTemplatesRoute } from "../../../utils/apiRoutes.js";
 import { loginFormValidator } from "../utils/formValidators.js";
+import $request from "../../../utils/requestHandler.js";
 
 class LoginPage extends Page {
 
@@ -10,7 +11,7 @@ class LoginPage extends Page {
         MenuState.setCanOpen(true);
         $('.header__burger').removeClass('disabled');
 
-        const loginPage = await this._getPageTemplate('/popup/templates/login.html');
+        const loginPage = await this._getPageTemplate(`${popupTemplatesRoute}/login.html`);
         $('.body').html(loginPage);
 
         this.submitBtn = document.querySelector('.form__submit');
@@ -28,22 +29,14 @@ class LoginPage extends Page {
             const password = $('input[name="password"]').val();
 
             const errors = loginFormValidator(email, password);
-            if (Object.keys(errors).length) {
-                throw { errors };
+            if (errors) {
+                throw errors;
             }
 
-            const response = await fetch(`${authRoute}/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password })
+            const { data } = await $request.post(`${authRoute}/login`, {
+                email,
+                password
             });
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw data;
-            }
 
             chrome.storage.local.set({
                 token: data.token,

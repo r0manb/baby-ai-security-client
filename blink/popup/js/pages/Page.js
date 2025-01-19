@@ -35,7 +35,11 @@ class Page {
     }
 
     setIsFetching = (bool) => this.isFetching = bool;
-    setSubmitBtnDisabled = (bool) => this.submitBtn.disabled = bool;
+    setSubmitBtnDisabled = (bool) => {
+        if (this.submitBtn) {
+            this.submitBtn.disabled = bool;
+        }
+    }
 
     render = async () => { }
     submitForm = async () => { }

@@ -35,13 +35,28 @@ const confirmPasswordValidator = (password, confirmPassword) => {
     if (!confirmPassword.length) {
         errors.push('Обязательное поле');
     }
-    if (password != confirmPassword){
+    if (password != confirmPassword) {
         errors.push('Пароли не совпадают');
     }
 
     return errors;
 }
 
+const makeError = (errors) => {
+    if (!Object.keys(errors).length) {
+        return null;
+    }
+
+    return {
+        error: {
+            response: {
+                data: {
+                    errors
+                }
+            }
+        }
+    }
+};
 
 
 export const loginFormValidator = (email = '', password = '') => {
@@ -53,7 +68,7 @@ export const loginFormValidator = (email = '', password = '') => {
     if (emailErrors.length) errors.email = emailErrors;
     if (passwordErrors.length) errors.password = passwordErrors;
 
-    return errors;
+    return makeError(errors);
 }
 
 export const registerFormValidator = (email = '', password = '', confirmPassword = '') => {
@@ -67,7 +82,7 @@ export const registerFormValidator = (email = '', password = '', confirmPassword
     if (passwordErrors.length) errors.password = passwordErrors;
     if (passwordConfirmErrors.length) errors.password_confirm = passwordConfirmErrors;
 
-    return errors;
+    return makeError(errors);
 }
 
 export const confirmationFormValidator = (password = '') => {
@@ -77,5 +92,5 @@ export const confirmationFormValidator = (password = '') => {
 
     if (passwordErrors.length) errors.password = passwordErrors;
 
-    return errors;
+    return makeError(errors);
 }

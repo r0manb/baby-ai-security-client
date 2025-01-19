@@ -20,8 +20,8 @@ const checkPage = async () => {
             selectedCategories,
             neutralCategoryId
         } = await chrome.storage.local.get([
-            'token', 
-            'extensionStatus', 
+            'token',
+            'extensionStatus',
             'selectedCategories',
             'neutralCategoryId'
         ]);
@@ -29,37 +29,24 @@ const checkPage = async () => {
         if (!extensionStatus || !token) {
             return document.body.classList.add("verification_completed");
         }
-        
-        const { apiRoute } = await import(chrome.runtime.getURL("/assets/utils/apiRoutes.js"));
-        const tabData = await chrome.runtime.sendMessage({ event: "GET_TAB" });
+        const tabData = await chrome.runtime.sendMessage({ action: "GET_TAB" });
         const text = document.body.innerText;
-        
-        const response = await fetch(`${apiRoute}/predict`, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                name: tabData.title,
-                url: tabData.url,
-                text
-            })
+
+        const categoryId = await chrome.runtime.sendMessage({
+            action: "PREDICT_CATEGORY_ID",
+            name: tabData.title,
+            url: tabData.url,
+            text,
         });
 
-        if (!response.ok) {
-            return document.body.classList.add("verification_completed");
-        }
-
-        const { category_id } = await response.json();
-
-        if ((!selectedCategories.length && category_id != neutralCategoryId) || selectedCategories.includes(category_id.toString())) {
+        if ((!selectedCategories.length && categoryId != neutralCategoryId) || selectedCategories.includes(categoryId.toString())) {
             return renderWrongPage();
         }
 
         return document.body.classList.add("verification_completed");
     } catch (error) {
         console.log(error);
+        return document.body.classList.add("verification_completed");
     }
 }
 

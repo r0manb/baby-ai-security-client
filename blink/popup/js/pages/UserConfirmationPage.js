@@ -1,14 +1,16 @@
 import Page from "./Page.js";
 import MenuState from "../utils/MenuState.js";
 import EventEmitter from "../utils/EventEmitter.js";
-import { authRoute } from "/assets/utils/apiRoutes.js";
+import { authRoute, popupTemplatesRoute } from "../../../utils/apiRoutes.js";
 import { confirmationFormValidator } from "../utils/formValidators.js";
+import $request from "../../../utils/requestHandler.js";
+import "../../../assets/libs/axios/axios.min.js";
 
 class UserConfirmationPage extends Page {
 
     render = async () => {
         MenuState.setCanOpen(false);
-        const authPage = await this._getPageTemplate('/popup/templates/auth.html');
+        const authPage = await this._getPageTemplate(`${popupTemplatesRoute}/auth.html`);
         $('.body').html(authPage);
         this.submitBtn = document.querySelector('.form__submit');
     }
@@ -23,24 +25,13 @@ class UserConfirmationPage extends Page {
             const password = $('input[name="password"]').val();
 
             const errors = confirmationFormValidator(password);
-            if (Object.keys(errors).length) {
-                throw { errors };
+            if (errors) {
+                throw errors;
             }
 
-            const response = await fetch(`${authRoute}/user_confirmation`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ password })
+            const { data } = await $request.post(`${authRoute}/user_confirmation`, {
+                password
             });
-            const data = await response.json();
-
-            if (!response.ok) {
-                if (response.status == 401) EventEmitter.emit('LOGOUT');
-                throw data;
-            }
 
             chrome.storage.local.set({
                 categories: data.categories.list,

@@ -2,8 +2,9 @@ import Page from "./Page.js";
 import MenuState from "../utils/MenuState.js";
 import EventEmitter from "../utils/EventEmitter.js";
 import showNotification from "../components/notification.js";
-import { authRoute } from "/assets/utils/apiRoutes.js";
+import { authRoute, popupTemplatesRoute } from "../../../utils/apiRoutes.js";
 import { registerFormValidator } from "../utils/formValidators.js";
+import $request from "../../../utils/requestHandler.js";
 
 class RegisterPage extends Page {
 
@@ -11,7 +12,7 @@ class RegisterPage extends Page {
         MenuState.setCanOpen(true);
         $('.header__burger').removeClass('disabled');
 
-        const registerPage = await this._getPageTemplate('/popup/templates/register.html');
+        const registerPage = await this._getPageTemplate(`${popupTemplatesRoute}/register.html`);
         $('.body').html(registerPage);
 
         this.submitBtn = document.querySelector('.form__submit');
@@ -30,26 +31,15 @@ class RegisterPage extends Page {
             const passwordConfirm = $('input[name="password_confirm"]').val();
 
             const errors = registerFormValidator(email, password, passwordConfirm);
-            if (Object.keys(errors).length) {
-                throw { errors };
+            if (errors) {
+                throw errors;
             }
 
-            const response = await fetch(`${authRoute}/register`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email,
-                    password,
-                    password_confirm: passwordConfirm
-                })
+            const { data } = await $request.post(`${authRoute}/register`, {
+                email,
+                password,
+                password_confirm: passwordConfirm
             });
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw data;
-            }
 
             showNotification(data.message, 'success');
             return EventEmitter.emit('RENDER_LOGIN_PAGE');

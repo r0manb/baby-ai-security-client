@@ -1,6 +1,7 @@
 import Page from "./Page.js";
 import MenuState from "../utils/MenuState.js";
 import EventEmitter from "../utils/EventEmitter.js";
+import { popupTemplatesRoute } from "../../../utils/apiRoutes.js";
 
 class MainPage extends Page {
 
@@ -23,7 +24,7 @@ class MainPage extends Page {
         MenuState.setCanOpen(true);
         $('.header__burger').removeClass('disabled');
 
-        const mainPage = await this._getPageTemplate('/popup/templates/main.html');
+        const mainPage = await this._getPageTemplate(`${popupTemplatesRoute}/main.html`);
         $('.body').html(mainPage);
 
         const setButtonStatus = (status) => {
